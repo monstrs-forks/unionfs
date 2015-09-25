@@ -8,16 +8,12 @@ var UnionFS = (function () {
         var self = this;
         for (var i = 0; i < UnionFS.sync.length; i++) {
             (function (method) {
-                self[method] = function () {
-                    return self._syncMethod(method, arguments);
-                };
+                self[method] = function () { return self._syncMethod(method, arguments); };
             })(UnionFS.sync[i]);
         }
         for (var i = 0; i < UnionFS.async.length; i++) {
             (function (method) {
-                self[method] = function () {
-                    self._asyncMethod(method, arguments);
-                };
+                self[method] = function () { self._asyncMethod(method, arguments); };
             })(UnionFS.async[i]);
         }
         return this;
@@ -86,10 +82,10 @@ var UnionFS = (function () {
             // Replace `callback` with our intermediate function.
             args[lastarg] = function (err) {
                 if (err)
-                    return iterate(i + 1, err);
+                    return iterate.call(this, i + 1, err);
                 if (cb)
                     cb.apply(cb, arguments);
-            };
+            }.bind(this);
             var j = this.fss.length - i - 1;
             var fs = this.fss[j];
             var funcs = this.funcs[j];

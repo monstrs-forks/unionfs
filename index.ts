@@ -240,9 +240,9 @@ class UnionFS {
 
             // Replace `callback` with our intermediate function.
             args[lastarg] = function(err) {
-                if(err) return iterate(i + 1, err);
+                if(err) return iterate.call(this, i + 1, err);
                 if(cb) cb.apply(cb, arguments);
-            };
+            }.bind(this);
 
             var j = this.fss.length - i - 1;
             var fs = this.fss[j];
